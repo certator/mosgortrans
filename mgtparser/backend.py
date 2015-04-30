@@ -105,8 +105,10 @@ class Schedule():
 
 	def _get_dumpable_object(self):
 		waypoints = {}
+		wp_list = []
 		for waypoint_name in self.schedule:
 			waypoints[waypoint_name] = []
+			wp_list += [waypoint_name]
 			for time in self.schedule[waypoint_name]:
 				hour, minute = time.split(':')
 				if len(hour) == 1:
@@ -119,7 +121,12 @@ class Schedule():
 		return {
 			'created': str(self.created) if self.created else None,
 			'valid': str(self.valid) if self.valid else None,
-			'waypoints': waypoints
+			'waypoints': waypoints,
+			'waypoints_list': wp_list,
+			'route': self.route,
+			'day': self.day,
+			'direction': self.direction,
+            
 		}
 
 	def dump_json(self):

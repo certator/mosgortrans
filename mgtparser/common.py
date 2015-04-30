@@ -22,7 +22,7 @@ def get_routes_list(filename):
 	with open(filename) as input_file:
 		for line in input_file:
 			if ' ' in line:
-				rtype, route = line.split()
-				yield (RouteType(rtype), route)
+				rtype, route = line.split(', ')
+				yield (RouteType(rtype.strip()), route.strip())
 			else:
 				yield (RouteType.Auto, line.rstrip())

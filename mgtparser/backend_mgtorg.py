@@ -107,6 +107,9 @@ class MgtOrgBackend(Backend):
 		schedule.created = _parse_date(created_re.search(message).group(1))
 		schedule.valid   = _parse_date(valid_re.search(message).group(1))
 		schedule.schedule = {}
+		schedule.route = route
+		schedule.day = day
+		schedule.direction = direction
 		for ind, w_match in enumerate(waypoint_re.finditer(message)):
 			waypoint = '%02d %s' % (ind, w_match.group(1))
 			times = []
