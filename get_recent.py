@@ -56,8 +56,8 @@ def process_route(route_type, route, day, created):
 		print(route_type.name, route, day, created)
 
 def save_schedule(route_type, route, day, direction, schedule):
-	if not (args.download and check_timestamp(schedule.created)):
-		return
+	#if not (args.download and check_timestamp(schedule.created)):
+	#	return
 	print('saving schedule:', route_type.name, route, day, direction)
 	dir = path.join(args.output_dir, route_type.name, route, day)
 	makedirs(dir, exist_ok=True)
@@ -76,17 +76,17 @@ def process_org(route_type, route):
 		schedule = backend_org.get_schedule(
 			route_type, route, day, 'AB', None)
 		process_route(route_type, route, day, schedule.created)
-		if not advanced_mode:
-			continue
+		#if not advanced_mode:
+		#	continue
 		save_schedule(route_type, route, day, 'AB', schedule)
 		print_info(schedule)
 		if len(backend_org.get_directions(route_type, route, day)) > 1:
 			schedule = backend_org.get_schedule(route_type,
 				route, day, 'BA', None)
-			if check_timestamp(schedule.created):
-				save_schedule(route_type, route, day,
-					'BA', schedule)
-				print_info(schedule)
+			#if check_timestamp(schedule.created):
+			save_schedule(route_type, route, day,
+				'BA', schedule)
+			print_info(schedule)
 
 times_file = open(args.output_file, 'w')
 for route_type, routes in zip(RouteType, all_routes):

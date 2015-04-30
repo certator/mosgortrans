@@ -106,15 +106,16 @@ class Schedule():
 	def _get_dumpable_object(self):
 		waypoints = {}
 		for waypoint_name in self.schedule:
-			waypoints[waypoint_name] = {}
+			waypoints[waypoint_name] = []
 			for time in self.schedule[waypoint_name]:
 				hour, minute = time.split(':')
 				if len(hour) == 1:
 					hour = '0' + hour
-				if hour in waypoints[waypoint_name]:
-					waypoints[waypoint_name][hour] += (',' + minute)
-				else:
-					waypoints[waypoint_name][hour] = minute
+				#if hour in waypoints[waypoint_name]:
+				#	waypoints[waypoint_name][hour] += (',' + minute)
+				#else:
+				#	waypoints[waypoint_name][hour] = minute
+				waypoints[waypoint_name] += [hour + '-' + minute]
 		return {
 			'created': str(self.created) if self.created else None,
 			'valid': str(self.valid) if self.valid else None,

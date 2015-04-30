@@ -77,6 +77,8 @@ class MgtOrgBackend(Backend):
 			result.remove('')
 		if ' -' in result:
 			result.remove(' -')
+		print ('>>', url)
+		print ('<<-', result, '-<<')
 		return result
 
 	def get_routes_by_type(self, route_type):
@@ -100,6 +102,8 @@ class MgtOrgBackend(Backend):
 		request = urlopen(url)
 		message = request.read().decode('cp1251')
 		message = whitespace_re.sub('', message)
+		#print ('>>', url)
+		#print ('<<-', message, '-<<')
 		schedule.created = _parse_date(created_re.search(message).group(1))
 		schedule.valid   = _parse_date(valid_re.search(message).group(1))
 		schedule.schedule = {}
@@ -117,4 +121,5 @@ class MgtOrgBackend(Backend):
 					time = '%s:%s%s' % (hour, m_match.group(2), ccode)
 					times.append(time)
 			schedule.schedule[waypoint] = times
+		#print(schedule.schedule)
 		return schedule
