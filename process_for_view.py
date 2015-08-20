@@ -1,3 +1,5 @@
+# -*- coding: utf-8
+
 import fnmatch
 import os
 import json
@@ -24,40 +26,45 @@ for d in data:
 tq = {}
 tt = []
 
-metros = [u'Каширская' , u'Кантемировская', u'Царицыно']
+with open('src.json') as f: 
+    src = json.loads(f.read())
+
+
 def hs_to_ts(s):
     return (int(s[0:2]), int(s[3:5]))
 
 for route, r in rr.items():
-    if not '1111100' in r:
+    kk = None
+    if '1111111' in r:
+        kk = '1111111'
+    if '1111100' in r:
+        kk = '1111100'
+    if kk is None:
         print 'not work wp', route
         continue
-    for dr, wp in r['1111100'].items():
+    for dr, wp in r[kk].items():
         metro_idx = None
         metro_wp = None
         metro_idx_t = None
-        metros = [u'Каширская' , u'Кантемировская', u'Царицыно']
+
         home_idx = None
         home_wp = None
         for k in sorted(wp['waypoints_list']):
             idx = re.match(r'(\d+).*', k).groups()[0] 
 
             if u'Метро' in k:
-                for m in metros:
+                for m in src['metros']:
                     if m in k:
                         #print route, dr, idx, k
                         metro_idx = idx
                         metro_idx_t = m
-                        metro_wp = k                    
-            
-            if u'Бирюлевская' in k:
-                #print route, dr, idx, k
-                home_idx = idx
-                home_wp = k
-            if u'Элеваторная' in k:
-                #print route, dr, idx, k
-                home_idx = idx
-                home_wp = k
+                        metro_wp = k   
+
+            for home in src['homes']:
+                if home == k[3:]:
+                    home_idx = idx
+                    home_wp = k
+
         #print route, dr, metro_idx, home_idx
         if metro_idx is None or home_idx is None:
             print '---no home'
@@ -70,7 +77,6 @@ for route, r in rr.items():
             q = int((t[0]*60 + t[1])/15)
             k = (q, metro_idx_t, t, route)
             
-
             tt += [k]
             
         
@@ -86,11 +92,13 @@ for q, metro_idx_t, t, route in sorted(tt):
     ti.setdefault(metro_idx_t, [])
     ti[metro_idx_t] += ['%d-%d/%s' % (t[0], t[1], route)]
 
-print '\t', '\t'.join(metros)
+print '\t', '\t'.join(src['metros'])
     
-for q in sorted(tq.keys()):
-    print q, '\t',
-    for i in range(0, 3):
-        print ', '.join(tq[q].get(metros[i], [])), '\t',
+for q in sorted(tq.keys(), key=lambda x: x if x >= 20*4 else (100+x)):
+    print q / 4, q % 4, '\t',
+    for i in range(0, len(src['metros'])):
+        print ', '.join(tq[q].get(src['metros'][i], [])), '\t',
     print ''
 
+#\d+-\d+/((3)|(23)|(3)|(Н3)|(223)|(257)|(627?))\D
+#
